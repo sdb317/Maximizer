@@ -4,6 +4,7 @@
 //
 
 #pragma once
+#pragma warning( disable : 4996)
 
 #include "windows.h"
 
@@ -19,4 +20,7 @@
 #include <vector>
 #include <iterator>
 
-// TODO: reference additional headers your program requires here
+#include <comdef.h>
+#include <comutil.h>
+
+#import "C:\WINDOWS\system32\msxml6.dll" rename_namespace("MSXML")

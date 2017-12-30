@@ -1,0 +1,73 @@
+<ProcessList>
+  <Process>
+    <CommandLine>C:\Program Files (x86)\Google\Chrome\Application\chrome.exe</CommandLine>
+    <Monitor>2</Monitor>
+    <Title>Chrome</Title>
+  </Process>
+  <Process>
+    <CommandLine>C:\Users\sbell\AppData\Local\Amazon\Kindle\application\Kindle.exe</CommandLine>
+    <Monitor>1</Monitor>
+    <Title>Kindle</Title>
+  </Process>
+  <Process>
+    <CommandLine>C:\Program Files\SumatraPDF\SumatraPDF.exe</CommandLine>
+    <Monitor>1</Monitor>
+    <Title>Sumatra</Title>
+  </Process>
+  <Process>
+    <CommandLine>start onenote</CommandLine>
+    <Monitor>1</Monitor>
+    <Position></Position>
+    <Size></Size>
+  </Process>
+  <Process>
+    <CommandLine>start excel</CommandLine>
+    <Monitor>1</Monitor>
+    <Position></Position>
+    <Size></Size>
+  </Process>
+  <Process>
+    <CommandLine>C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe</CommandLine>
+    <Title>Visual Studio</Title>
+    <Monitor>2</Monitor>
+  </Process>
+  <Process>
+    <CommandLine>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe</CommandLine>
+    <Title>Visual Studio</Title>
+    <Monitor>2</Monitor>
+  </Process>
+  <Process>
+    <CommandLine>C:\Program Files (x86)\Microsoft VS Code\Code.exe</CommandLine>
+    <Title>Code</Title>
+    <Monitor>1</Monitor>
+  </Process>
+  <Process>
+    <CommandLine>C:\Program Files (x86)\WinMerge\WinMergeU.exe /r C:\Users\sbell\Dev\Projects\DataWorkbench\app C:\Users\sbell\Dev\Projects\DataWorkbenchHeroku\app</CommandLine>
+    <Title>Chrome</Title>
+    <Monitor>2</Monitor>
+    <Position>0.0</Position>
+    <Size>0.5</Size>
+  </Process>
+  <Process>
+    <CommandLine>C:\Program Files\Notepad++\notepad++.exe</CommandLine>
+    <Title>Notepad++</Title>
+    <Monitor>1</Monitor>
+    <Position>0.5</Position>
+    <Size>0.5</Size>
+  </Process>
+  <Process>
+    <CommandLine>C:\Program Files\Mozilla Firefox\firefox.exe</CommandLine>
+    <Title>Firefox</Title>
+    <Monitor>1</Monitor>
+  </Process>
+  <Process>
+    <CommandLine>C:\Program Files (x86)\pgAdmin 4\runtime\pgAdmin4.exe</CommandLine>
+    <Title>pgAdmin</Title>
+    <Monitor>1</Monitor>
+  </Process>
+  <Process>
+    <CommandLine>C:\Users\sbell\AppData\Local\Programs\Fiddler\Fiddler.exe</CommandLine>
+    <Title>Fiddler</Title>
+    <Monitor>1</Monitor>
+  </Process>
+</ProcessList>

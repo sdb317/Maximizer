@@ -77,10 +77,29 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CBstr.h" />
+    <ClInclude Include="CCoInitialise.h" />
+    <ClInclude Include="CDate.h" />
+    <ClInclude Include="CDocument.h" />
+    <ClInclude Include="CDocumentTransform.h" />
+    <ClInclude Include="CMonitor.h" />
+    <ClInclude Include="CNode.h" />
+    <ClInclude Include="CNodeList.h" />
+    <ClInclude Include="CProcess.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CBstr.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="CDocument.cpp" />
+    <ClCompile Include="CDocumentTransform.cpp" />
+    <ClCompile Include="CMonitor.cpp" />
+    <ClCompile Include="CNode.cpp" />
+    <ClCompile Include="CNodeList.cpp" />
+    <ClCompile Include="CProcess.cpp" />
     <ClCompile Include="Maximizer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
