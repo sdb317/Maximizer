@@ -73,7 +73,7 @@ BOOL CALLBACK EnumForLayout(
 			if (!(_tcsstr(FileName, L"SystemApps"))) // Ignore system apps
 				if (_tcslen(Title) > 0) // Ignore windows with no titles
 					if (!(_tcsstr(Title, L"Maximizer.exe"))) // Ignore this program
-						if (!(_tcscmp(Title, L"Microsoft Edge") == 0) && !(_tcscmp(Title, L"Program Manager") == 0)) // Ignore Windows hidden desktop bits
+						if (!(_tcscmp(Title, L"Microsoft Edge") == 0) && !(_tcscmp(Title, L"Microsoft Store") == 0) && !(_tcscmp(Title, L"Program Manager") == 0) && !(_tcscmp(Title, L"Settings") == 0)) // Ignore Windows hidden desktop bits
 						if ((GetWindow(hwnd, GW_CHILD) != NULL) || (_tcscmp(Title, L"Microsoft Visual Studio") != 0)) {
 							std::wcout << FileName << std::endl;
 							std::wcout << _T("    ") << Title << std::endl;
