@@ -72,18 +72,19 @@ BOOL CALLBACK EnumForLayout(
 		if (IsWindowVisible(hwnd))
 			if (!(_tcsstr(FileName, L"SystemApps"))) // Ignore system apps
 				if (_tcslen(Title) > 0) // Ignore windows with no titles
-					if (!(_tcsstr(Title, L"Maximizer.exe"))) // Ignore this program
-						if (!(_tcscmp(Title, L"Microsoft Edge") == 0) && !(_tcscmp(Title, L"Program Manager") == 0)) // Ignore Windows hidden desktop bits
-						if ((GetWindow(hwnd, GW_CHILD) != NULL) || (_tcscmp(Title, L"Microsoft Visual Studio") != 0)) {
-							std::wcout << FileName << std::endl;
-							std::wcout << _T("    ") << Title << std::endl;
-							HMONITOR hMonitor = MonitorFromWindow(hwnd, NULL); // Need to add it to the correct monitor's window list
-							std::for_each(
-								MonitorList.begin(),
-								MonitorList.end(),
-								[hMonitor, hwnd](CMonitor* pMonitor) { if (pMonitor->hMonitor == hMonitor) pMonitor->WindowList.push_back(hwnd); }
-							);
-						}
+			        if ((!(_tcsstr(Title, L"Settings"))) && (!(_tcsstr(Title, L"Microsoft Store"))))// Ignore Microsoft crap
+					    if (!(_tcsstr(Title, L"Maximizer"))) // Ignore this program
+						    if (!(_tcscmp(Title, L"Microsoft Edge") == 0) && !(_tcscmp(Title, L"Program Manager") == 0)) // Ignore Windows hidden desktop bits
+						    if ((GetWindow(hwnd, GW_CHILD) != NULL) || (_tcscmp(Title, L"Microsoft Visual Studio") != 0)) {
+							    std::wcout << FileName << std::endl;
+							    std::wcout << _T("    ") << Title << std::endl;
+							    HMONITOR hMonitor = MonitorFromWindow(hwnd, NULL); // Need to add it to the correct monitor's window list
+							    std::for_each(
+								    MonitorList.begin(),
+								    MonitorList.end(),
+								    [hMonitor, hwnd](CMonitor* pMonitor) { if (pMonitor->hMonitor == hMonitor) pMonitor->WindowList.push_back(hwnd); }
+							    );
+						    }
 	return TRUE;
 }
 
@@ -180,12 +181,13 @@ BOOL Create( // Read the list, create each process, get the top-most window and 
 		}
 		else
 		{
-			WaitForInputIdle
-				(
-				ProcessInformation.hProcess,
-				20 * 1000
-				);
-			CProcess Process(CommandLine, Title, MonitorList[Monitor], Position, Size);
+			//WaitForInputIdle
+			//	(
+			//	ProcessInformation.hProcess,
+			//	20 * 1000
+			//	);
+			Sleep(30 * 1000);
+            CProcess Process(CommandLine, Title, MonitorList[Monitor], Position, Size);
 			Process.PID = ProcessInformation.dwProcessId;
 			EnumDesktopWindows(NULL, (WNDENUMPROC)EnumForCreate, (LPARAM)&Process); // Find main window
 		}

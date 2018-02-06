@@ -1,5 +1,10 @@
 <ProcessList>
   <Process>
+    <CommandLine>C:\Program Files\Microsoft Office\Office16\OUTLOOK.EXE</CommandLine>
+    <Monitor>2</Monitor>
+    <Title>Outlook</Title>
+  </Process>
+  <Process>
     <CommandLine>C:\Program Files (x86)\Google\Chrome\Application\chrome.exe</CommandLine>
     <Monitor>2</Monitor>
     <Title>Chrome</Title>
@@ -15,35 +20,22 @@
     <Title>Sumatra</Title>
   </Process>
   <Process>
-    <CommandLine>start onenote</CommandLine>
+    <CommandLine>C:\Program Files\Microsoft Office\Office16\ONENOTE.EXE</CommandLine>
     <Monitor>1</Monitor>
+    <Title>OneNote</Title>
     <Position></Position>
     <Size></Size>
   </Process>
   <Process>
-    <CommandLine>start excel</CommandLine>
-    <Monitor>1</Monitor>
+    <CommandLine>C:\Program Files\Microsoft Office\Office16\EXCEL.EXE</CommandLine>
+    <Monitor>2</Monitor>
+    <Title>Excel</Title>
     <Position></Position>
     <Size></Size>
-  </Process>
-  <Process>
-    <CommandLine>C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe</CommandLine>
-    <Title>Visual Studio</Title>
-    <Monitor>2</Monitor>
-  </Process>
-  <Process>
-    <CommandLine>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe</CommandLine>
-    <Title>Visual Studio</Title>
-    <Monitor>2</Monitor>
-  </Process>
-  <Process>
-    <CommandLine>C:\Program Files (x86)\Microsoft VS Code\Code.exe</CommandLine>
-    <Title>Code</Title>
-    <Monitor>1</Monitor>
   </Process>
   <Process>
     <CommandLine>C:\Program Files (x86)\WinMerge\WinMergeU.exe /r C:\Users\sbell\Dev\Projects\DataWorkbench\app C:\Users\sbell\Dev\Projects\DataWorkbenchHeroku\app</CommandLine>
-    <Title>Chrome</Title>
+    <Title>WinMerge</Title>
     <Monitor>2</Monitor>
     <Position>0.0</Position>
     <Size>0.5</Size>
@@ -70,4 +62,23 @@
     <Title>Fiddler</Title>
     <Monitor>1</Monitor>
   </Process>
+<!--
+  <Process>
+    <CommandLine>C:\Program Files (x86)\Microsoft VS Code\Code.exe</CommandLine>
+    <Title>Code</Title>
+    <Monitor>1</Monitor>
+  </Process>
+-->
+  <Process>
+    <CommandLine>C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe</CommandLine>
+    <Title>Visual Studio</Title>
+    <Monitor>2</Monitor>
+  </Process>
+  <Process>
+    <CommandLine>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe</CommandLine>
+    <Title>Visual Studio</Title>
+    <Monitor>2</Monitor>
+  </Process>
+<!--
+-->
 </ProcessList>
