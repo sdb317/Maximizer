@@ -17,6 +17,7 @@
 
 long TaskbarSize = 0;
 TCHAR Title[4096];
+TCHAR ClassName[4096];
 
 std::vector<CMonitor*> MonitorList;
 
@@ -50,6 +51,8 @@ BOOL CALLBACK EnumForLayout(
 {
 	ZeroMemory(Title, sizeof(Title));
 	GetWindowText(hwnd, Title, sizeof(Title) - 1);
+	ZeroMemory(ClassName, sizeof(ClassName));
+    GetClassName(hwnd, ClassName, sizeof(ClassName) - 1);
 	DWORD ProcessId = 0;
 	GetWindowThreadProcessId(
 		hwnd,
@@ -63,10 +66,15 @@ BOOL CALLBACK EnumForLayout(
 #ifdef _DEBUG
 			//std::wcout << FileName << std::endl;
 			//std::wcout << _T("    ") << Title << std::endl;
+			//std::wcout << _T("    ") << ClassName << std::endl;
 #endif
 		}
 		CloseHandle(ProcessHandle);
 	}
+	if (FindWindow(L"Windows.UI.Core.CoreWindow", Title)) { // Ignore all hidden 'Metro' apps
+		std::wcout << _T("Metro: ") << Title << std::endl;
+	    return TRUE;
+    }
 	BOOL IncludeIconic = (BOOL)lParam;
 	if (IncludeIconic || (IsIconic(hwnd) == 0)) // Only tile windows that aren't already minimised
 		if (IsWindowVisible(hwnd))
