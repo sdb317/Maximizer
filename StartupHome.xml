@@ -11,7 +11,7 @@
     <Title>Google Chrome</Title>
     <left>1</left>
     <top>1</top>
-    <right>1199</right>
+    <right>1079</right>
     <bottom>1879</bottom>
   </Process>
   <Process>
@@ -19,7 +19,7 @@
     <Title>PLUS</Title>
     <left>1</left>
     <top>1</top>
-    <right>1199</right>
+    <right>1079</right>
     <bottom>939</bottom>
   </Process>
   <Process>
@@ -27,31 +27,31 @@
     <Title>DevTools</Title>
     <left>1</left>
     <top>941</top>
-    <right>1199</right>
+    <right>1079</right>
     <bottom>1879</bottom>
   </Process>
   <Process>
     <CommandLine>C:\Users\sbell\AppData\Local\Amazon\Kindle\application\Kindle.exe</CommandLine>
     <Title>Kindle</Title>
-    <left>1201</left>
+    <left>1081</left>
     <top>1</top>
-    <right>2399</right>
+    <right>2159</right>
     <bottom>1879</bottom>
   </Process>
   <Process>
     <CommandLine>C:\Program Files\SumatraPDF\SumatraPDF.exe</CommandLine>
     <Title>Sumatra</Title>
-    <left>1201</left>
+    <left>1081</left>
     <top>1</top>
-    <right>2399</right>
+    <right>2159</right>
     <bottom>1879</bottom>
   </Process>
   <Process>
     <CommandLine>C:\Program Files\Microsoft Office\Office16\ONENOTE.EXE</CommandLine>
     <Title>OneNote</Title>
-    <left>1201</left>
+    <left>1081</left>
     <top>1</top>
-    <right>2399</right>
+    <right>2159</right>
     <bottom>1879</bottom>
   </Process>
   <Process>
@@ -59,7 +59,7 @@
     <Title>Excel</Title>
     <left>1</left>
     <top>1</top>
-    <right>1199</right>
+    <right>1079</right>
     <bottom>1879</bottom>
   </Process>
   <Process>
@@ -69,33 +69,33 @@
   <Process>
     <CommandLine>C:\Program Files\Notepad++\notepad++.exe</CommandLine>
     <Title>Notepad++</Title>
-    <left>1201</left>
+    <left>1081</left>
     <top>1</top>
-    <right>2399</right>
+    <right>2159</right>
     <bottom>1879</bottom>
   </Process>
   <Process>
     <CommandLine>C:\Program Files\Mozilla Firefox\firefox.exe</CommandLine>
     <Title>Firefox</Title>
-    <left>1201</left>
+    <left>1081</left>
     <top>1</top>
-    <right>2399</right>
+    <right>2159</right>
     <bottom>1879</bottom>
   </Process>
   <Process>
     <CommandLine>C:\Program Files (x86)\pgAdmin 4\runtime\pgAdmin4.exe</CommandLine>
     <Title>pgAdmin</Title>
-    <left>1201</left>
+    <left>1081</left>
     <top>1</top>
-    <right>2399</right>
+    <right>2159</right>
     <bottom>1879</bottom>
   </Process>
   <Process>
     <CommandLine>C:\Users\sbell\AppData\Local\Programs\Fiddler\Fiddler.exe</CommandLine>
     <Title>Fiddler</Title>
-    <left>1201</left>
+    <left>1081</left>
     <top>1</top>
-    <right>2399</right>
+    <right>2159</right>
     <bottom>1879</bottom>
   </Process>
   <Process>
@@ -103,7 +103,7 @@
     <Title>Visual Studio</Title>
     <left>1</left>
     <top>1</top>
-    <right>1199</right>
+    <right>1079</right>
     <bottom>1879</bottom>
   </Process>
   <Process>
@@ -111,7 +111,7 @@
     <Title>Visual Studio</Title>
     <left>1</left>
     <top>1</top>
-    <right>1199</right>
+    <right>1079</right>
     <bottom>1879</bottom>
   </Process>
   <Process>
@@ -119,17 +119,16 @@
     <Title>Visual SourceSafe</Title>
     <left>1</left>
     <top>941</top>
-    <right>1199</right>
+    <right>1079</right>
     <bottom>1879</bottom>
   </Process>
-  <!--
   <Process>
     <CommandLine>C:\Program Files (x86)\Microsoft VS Code\Code.exe</CommandLine>
     <Title>Code</Title>
-    <Monitor>1</Monitor>
+    <left>1081</left>
+    <top>1</top>
+    <right>2159</right>
+    <bottom>1879</bottom>
   </Process>
-  -->
-<!--
--->
 </ProcessList>
 

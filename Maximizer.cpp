@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include <psapi.h> // For access to GetModuleFileNameEx
 #include <strsafe.h>
+#include <sstream>
 
 #include "CCoInitialise.h"
 #include "CBstr.h"
@@ -18,10 +19,97 @@
 long TaskbarSize = 0;
 TCHAR Title[4096];
 TCHAR ClassName[4096];
+TCHAR FileName[MAX_PATH];
 
 std::vector<CMonitor*> MonitorList;
 
-BOOL CALLBACK MonitorEnumProc(
+void PrintError(
+	_TCHAR* FunctionName
+	)
+{
+	LPVOID pMessage;
+	LPVOID pMessageText;
+	DWORD Error = GetLastError();
+	FormatMessage(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+		NULL,
+		Error,
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		(LPTSTR)&pMessage,
+		0, 
+		NULL
+	);
+	pMessageText = (LPVOID)LocalAlloc(LMEM_ZEROINIT, (lstrlen((LPCTSTR)pMessage) + lstrlen(FunctionName) + lstrlen(L" error ") + 40) * sizeof(TCHAR));
+	StringCchPrintf((LPTSTR)pMessageText, LocalSize(pMessageText) / sizeof(TCHAR), TEXT("%s error %d: %s"), FunctionName, Error, pMessage);
+	std::wcout << (LPCTSTR)pMessageText << std::endl;
+}
+
+BOOL TaskbarWindow( // Does this window correspond to the top-level window of an app in the Taskbar? I.e. is it the one we want to re-size?
+	HWND hwnd
+	)
+{
+    WINDOWINFO WindowInfo;
+	ZeroMemory(&WindowInfo, sizeof(WindowInfo));
+    GetWindowInfo(hwnd, &WindowInfo);
+    if (!(WindowInfo.dwExStyle & WS_EX_APPWINDOW)) {
+        if (WindowInfo.dwExStyle & WS_EX_TOOLWINDOW)
+ 	        return FALSE;
+        if (WindowInfo.dwStyle & WS_CHILD)
+ 	        return FALSE;
+    }
+    if ((GetParent(hwnd)) && (WindowInfo.dwStyle & WS_POPUP))
+ 	    return FALSE;
+    if (WindowInfo.dwExStyle & WS_EX_CLIENTEDGE)
+ 	    return FALSE;
+    if (WindowInfo.dwExStyle & WS_EX_DLGMODALFRAME)
+ 	    return FALSE;
+    if (!GetWindow(hwnd, GW_CHILD)) // It should have children
+ 	    return FALSE;
+	ZeroMemory(Title, sizeof(Title));
+	GetWindowText(hwnd, Title, sizeof(Title) - 1);
+	if (!(_tcslen(Title) > 0)) // Ignore windows with no titles
+	    return FALSE;
+	if (FindWindow(L"Windows.UI.Core.CoreWindow", Title)) { // Ignore all hidden 'Metro' apps
+	    return FALSE;
+    }
+    WINDOWPLACEMENT WindowPlacement;
+	ZeroMemory(&WindowPlacement, sizeof(WindowPlacement));
+    GetWindowPlacement(hwnd, &WindowPlacement);
+    if (!WindowPlacement.rcNormalPosition.left && !WindowPlacement.rcNormalPosition.top && !WindowPlacement.rcNormalPosition.right && !WindowPlacement.rcNormalPosition.bottom)
+	    return FALSE; // Zero size
+ 	return TRUE;
+}
+
+void GetProcessInfo( // Get the executable for the app
+	HWND hwnd
+	)
+{
+	ZeroMemory(ClassName, sizeof(ClassName));
+    GetClassName(hwnd, ClassName, sizeof(ClassName) - 1);
+	DWORD ProcessId = 0;
+	GetWindowThreadProcessId(
+		hwnd,
+		&ProcessId
+	); 
+	HANDLE ProcessHandle = NULL;
+	ZeroMemory(FileName, sizeof(FileName));
+	ProcessHandle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, ProcessId);
+	if (ProcessHandle != NULL) {
+		if (GetModuleFileNameEx(ProcessHandle, NULL, FileName, MAX_PATH) != 0) {
+#ifdef _DEBUG
+			//std::wcout << FileName << std::endl;
+			//std::wcout << _T("    ") << Title << std::endl;
+			//std::wcout << _T("    ") << ClassName << std::endl;
+#endif
+		}
+		CloseHandle(ProcessHandle);
+	}
+    else {
+        PrintError(L"OpenProcess");
+    }
+}
+
+BOOL CALLBACK MonitorEnumProc( // Build a list of the system's monitors
 	HMONITOR hMonitor,
 	HDC      hdcMonitor,
 	LPRECT   lprcMonitor,
@@ -44,7 +132,43 @@ BOOL CALLBACK MonitorEnumProc(
 	return TRUE;
 }
 
-BOOL CALLBACK EnumForLayout(
+BOOL Create( // Read the list and create each process
+	_TCHAR* DocumentName
+	)
+{
+	CodLib::CCoInitialise CoInitialise;
+	CodLib::CDocument Document;
+	Document.LoadDocument(CodLib::CBstr(DocumentName));
+	CodLib::CNodeList Nodes = Document.FindNodes(L"/ProcessList/Process");
+	CodLib::CNode Node;
+	while (!((Node = Nodes.NextNode()).IsEmpty())) {
+		_bstr_t CommandLine = (_bstr_t)Node.FindNode(L"CommandLine");
+		std::wcout << CommandLine << std::endl;
+		STARTUPINFO StartupInfo;
+		ZeroMemory(&StartupInfo, sizeof(StartupInfo));
+		StartupInfo.cb = sizeof(StartupInfo);
+		PROCESS_INFORMATION ProcessInformation;
+		ZeroMemory(&ProcessInformation, sizeof(ProcessInformation));
+		if (!
+			CreateProcess(
+				NULL, // _In_opt_ LPCTSTR lpApplicationName,
+				(LPTSTR)CommandLine, // (LPTSTR)CommandLine, // _Inout_opt_ LPTSTR lpCommandLine,
+				NULL, // _In_opt_ LPSECURITY_ATTRIBUTES lpProcessAttributes,
+				NULL, // _In_opt_ LPSECURITY_ATTRIBUTES lpThreadAttributes,
+				FALSE, // _In_ BOOL bInheritHandles,
+				DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP, // _In_ DWORD dwCreationFlags,
+				NULL, // _In_opt_ LPVOID lpEnvironment,
+				NULL, // _In_opt_ LPCTSTR lpCurrentDirectory,
+				&StartupInfo, // _In_ LPSTARTUPINFO lpStartupInfo,
+				&ProcessInformation // _Out_ LPPROCESS_INFORMATION lpProcessInformation
+			)
+        )
+            PrintError(L"CreateProcess");
+	}
+	return TRUE;
+}
+
+BOOL CALLBACK EnumForLayout( // Add a list of 'restored' windows to tile for each monitor
 	HWND hwnd,
 	LPARAM lParam // IncludeIconic
 	)
@@ -71,6 +195,9 @@ BOOL CALLBACK EnumForLayout(
 		}
 		CloseHandle(ProcessHandle);
 	}
+    else {
+        PrintError(L"OpenProcess");
+    }
 	if (FindWindow(L"Windows.UI.Core.CoreWindow", Title)) { // Ignore all hidden 'Metro' apps
 		std::wcout << _T("Metro: ") << Title << std::endl;
 	    return TRUE;
@@ -96,118 +223,134 @@ BOOL CALLBACK EnumForLayout(
 	return TRUE;
 }
 
-BOOL Layout()
+BOOL Layout( // Tile and (optionally) minimise
+    )
 {
 	EnumDesktopWindows(NULL, (WNDENUMPROC)EnumForLayout, (LPARAM)false); // Add each window to a monitor
 	for (std::vector<CMonitor*>::iterator i = MonitorList.begin(); i != MonitorList.end(); ++i){
 		(*i)->Layout();
 		delete *i;
 	}
-	HWND lTrayHwnd = FindWindow(_T("Shell_TrayWnd"), NULL);
-	SendMessage(lTrayHwnd, WM_COMMAND, MIN_ALL, 0); // Minimize all windows
+    SHORT KeyState=GetAsyncKeyState(VK_LCONTROL); // Is the left Ctrl key being held down?
+    if (KeyState & 0x8000) {
+	    HWND lTrayHwnd = FindWindow(_T("Shell_TrayWnd"), NULL);
+	    SendMessage(lTrayHwnd, WM_COMMAND, MIN_ALL, 0); // Minimize all windows
+    }
 	return TRUE;
 }
 
-BOOL CALLBACK EnumForCreate(
+BOOL CALLBACK EnumForRecord( // Record the current window positions in the XML doc
 	HWND hwnd,
-	LPARAM lParam // CProcess*
+	LPARAM lParam
 	)
 {
-	ZeroMemory(Title, sizeof(Title));
-	GetWindowText(hwnd, Title, sizeof(Title) - 1);
-	CProcess* pProcess = (CProcess*)lParam;
-	DWORD ProcessId = 0;
-	GetWindowThreadProcessId(
-		hwnd,
-		&ProcessId
-		);
-	if ((ProcessId == pProcess->PID) && (_tcsstr(Title, pProcess->Title)))
-	{
-		pProcess->hWnd = hwnd;
-		pProcess->Layout();
-		return FALSE;
-	}
-	else
-		return TRUE;
+    if (!TaskbarWindow(hwnd))
+	    return TRUE;
+	GetProcessInfo(hwnd);
+    CodLib::CDocument* pDocument = (CodLib::CDocument*)lParam;
+    _bstr_t XPath = L"";
+    XPath += L"/ProcessList/Process[CommandLine/text()=\"";
+    XPath += FileName;
+    XPath += L"\"]";
+	CodLib::CNode Node = pDocument->FindNode(XPath);
+    if ((!Node.IsEmpty()) && (_tcslen(Title) > 0)) {
+        WINDOWPLACEMENT WindowPlacement;
+	    ZeroMemory(&WindowPlacement, sizeof(WindowPlacement));
+        GetWindowPlacement(hwnd, &WindowPlacement);
+        if (!WindowPlacement.rcNormalPosition.left && !WindowPlacement.rcNormalPosition.top && !WindowPlacement.rcNormalPosition.right && !WindowPlacement.rcNormalPosition.bottom)
+	        return TRUE;
+		// Should update the XML doc nodes here!
+        std::wcout << FileName << L" - " << Title << std::endl;
+		std::wcout << L"\t" << L"(" << WindowPlacement.rcNormalPosition.left << L"," << WindowPlacement.rcNormalPosition.top << L"," << WindowPlacement.rcNormalPosition.right << L"," << WindowPlacement.rcNormalPosition.bottom << L")" << std::endl;
+    }
+	return TRUE;
 }
 
-BOOL Create( // Read the list, create each process, get the top-most window and position with a specified display and layout
+BOOL Record(
 	_TCHAR* DocumentName
-	)
+    )
 {
-	HWND lTrayHwnd = FindWindow(_T("Shell_TrayWnd"), NULL);
 	CodLib::CCoInitialise CoInitialise;
 	CodLib::CDocument Document;
 	Document.LoadDocument(CodLib::CBstr(DocumentName));
-	CodLib::CNodeList Nodes = Document.FindNodes(L"/ProcessList/Process");
-	CodLib::CNode Node;
-	while (!((Node = Nodes.NextNode()).IsEmpty()))
-	{
-		_bstr_t CommandLine = (_bstr_t)Node.FindNode(L"CommandLine");
-		_bstr_t Title = (_bstr_t)Node.FindNode(L"Title");
-		long Monitor = (long)Node.FindNode(L"Monitor");
-		double Position = (double)Node.FindNode(L"Position");
-		double Size = (double)Node.FindNode(L"Size");
-		std::wcout << CommandLine << std::endl;
-		STARTUPINFO StartupInfo;
-		ZeroMemory(&StartupInfo, sizeof(StartupInfo));
-		StartupInfo.cb = sizeof(StartupInfo);
-		PROCESS_INFORMATION ProcessInformation;
-		ZeroMemory(&ProcessInformation, sizeof(ProcessInformation));
-		BOOL Status = 
-			CreateProcess
-				(
-				NULL, // _In_opt_ LPCTSTR lpApplicationName,
-				(LPTSTR)CommandLine, // (LPTSTR)CommandLine, // _Inout_opt_ LPTSTR lpCommandLine,
-				NULL, // _In_opt_ LPSECURITY_ATTRIBUTES lpProcessAttributes,
-				NULL, // _In_opt_ LPSECURITY_ATTRIBUTES lpThreadAttributes,
-				FALSE, // _In_ BOOL bInheritHandles,
-				DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP, // _In_ DWORD dwCreationFlags,
-				NULL, // _In_opt_ LPVOID lpEnvironment,
-				NULL, // _In_opt_ LPCTSTR lpCurrentDirectory,
-				&StartupInfo, // _In_ LPSTARTUPINFO lpStartupInfo,
-				&ProcessInformation // _Out_ LPPROCESS_INFORMATION lpProcessInformation
-				);
-		if (!Status)
-		{
-			LPVOID pMessage;
-			LPVOID pMessageText;
-			DWORD Error = GetLastError();
-			FormatMessage
-				(
-				FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-				NULL,
-				Error,
-				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-				(LPTSTR)&pMessage,
-				0, 
-				NULL
-				);
-			pMessageText = (LPVOID)LocalAlloc(LMEM_ZEROINIT, (lstrlen((LPCTSTR)pMessage) + lstrlen(L"CreateProcess error ") + 40) * sizeof(TCHAR));
-			StringCchPrintf((LPTSTR)pMessageText, LocalSize(pMessageText) / sizeof(TCHAR), TEXT("CreateProcess error %d: %s"), Error, pMessage);
-			std::wcout << (LPCTSTR)pMessageText << std::endl;
-		}
-		else
-		{
-			//WaitForInputIdle
-			//	(
-			//	ProcessInformation.hProcess,
-			//	20 * 1000
-			//	);
-			Sleep(30 * 1000);
-            CProcess Process(CommandLine, Title, MonitorList[Monitor], Position, Size);
-			Process.PID = ProcessInformation.dwProcessId;
-			EnumDesktopWindows(NULL, (WNDENUMPROC)EnumForCreate, (LPARAM)&Process); // Find main window
-		}
-#ifndef _DEBUG
-		SendMessage(lTrayHwnd, WM_COMMAND, MIN_ALL, 0); // Minimize all windows
-#endif
-	}
+	EnumDesktopWindows(NULL, (WNDENUMPROC)EnumForRecord, (LPARAM)&Document);
 	return TRUE;
 }
 
-BOOL Record()
+BOOL CALLBACK EnumForPlayback( // Restore and position the windows based on the window positions in the XML doc
+	HWND hwnd,
+	LPARAM lParam
+	)
 {
+    if (!TaskbarWindow(hwnd))
+	    return TRUE;
+	GetProcessInfo(hwnd);
+    CodLib::CDocument* pDocument = (CodLib::CDocument*)lParam;
+    _bstr_t XPath = L"";
+    XPath += L"/ProcessList/Process[CommandLine/text()=\"";
+    XPath += FileName;
+    // /ProcessList/Process[CommandLine/text()="C:\Program Files\SumatraPDF\SumatraPDF.exe" and contains("Sumatra",Title/text())]
+    XPath += L"\" and contains(\"";
+    XPath += Title;
+    XPath += L"\",Title/text())]";
+#ifdef _DEBUG
+    std::wcout << XPath << std::endl;
+#endif
+	CodLib::CNode Node = pDocument->FindNode(XPath);
+    if ((!Node.IsEmpty()) && (_tcslen(Title) > 0)) {
+        std::wcout << FileName << L" - " << Title << std::endl;
+		long left = (long)Node.FindNode(L"left");
+		long top = (long)Node.FindNode(L"top");
+		long right = (long)Node.FindNode(L"right");
+		long bottom = (long)Node.FindNode(L"bottom");
+		long width = right - left;
+		long height = bottom - top;
+	    if (_tcscmp(Title, L"Microsoft Visual Studio") != 0) { // To include the border...
+		    left += 1;
+		    top += 1;
+		    width += -2;
+		    height += -2;
+	    }
+        WINDOWPLACEMENT WindowPlacement;
+	    ZeroMemory(&WindowPlacement, sizeof(WindowPlacement));
+        GetWindowPlacement(hwnd, &WindowPlacement);
+        WindowPlacement.showCmd = SW_RESTORE;
+		if (!
+	        SetWindowPlacement( // Need to restore before re-sizing
+		        hwnd,
+                &WindowPlacement
+		    )
+        )
+            PrintError(L"SetWindowPos");
+		else
+		    if (!
+	            SetWindowPos(
+		            hwnd,
+		            HWND_TOP,
+		            left,
+		            top,
+		            width,
+		            height,
+		            SWP_SHOWWINDOW
+		        )
+            )
+                PrintError(L"SetWindowPos");
+		    else
+                std::wcout << L"\t" << L"(" << left << L"," << top << L"," << right << L"," << bottom << L")" << std::endl;
+    }
+	return TRUE;
+}
+
+BOOL Playback(
+	_TCHAR* DocumentName
+    )
+{
+	CodLib::CCoInitialise CoInitialise;
+	CodLib::CDocument Document;
+	Document.LoadDocument(CodLib::CBstr(DocumentName));
+	EnumDesktopWindows(NULL, (WNDENUMPROC)EnumForPlayback, (LPARAM)&Document);
+	HWND lTrayHwnd = FindWindow(_T("Shell_TrayWnd"), NULL);
+	SendMessage(lTrayHwnd, WM_COMMAND, MIN_ALL, 0); // Minimize all windows
 	return TRUE;
 }
 
@@ -216,18 +359,26 @@ int _tmain(
 	_TCHAR* argv[]
 	)
 {
+	HWND lTrayHwnd = FindWindow(_T("Shell_TrayWnd"), NULL);
 	EnumDisplayMonitors(NULL, NULL, (MONITORENUMPROC)MonitorEnumProc, NULL); // Build a list of monitors...
 	if (argc >= 2) {
-		switch (argv[1][0])
-		{
+		switch (argv[1][0]) {
 		case '-':
-			switch (argv[1][1])
-			{
+			switch (argv[1][1]) {
+			case 'c': // Create processes from a list
+				Create(argv[2]);
+#ifndef _DEBUG
+		        SendMessage(lTrayHwnd, WM_COMMAND, MIN_ALL, 0); // Minimize all windows
+#endif
+				break;
 			case 'l': // Layout restored windows
 				Layout();
 				break;
-			case 'c': // Create processes from a list
-				Create(argv[2]);
+			case 'r': // Save all window positions
+				Record(argv[2]);
+				break;
+			case 'p': // Restore all window positions
+				Playback(argv[2]);
 				break;
 			default:
 				break;
