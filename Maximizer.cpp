@@ -48,6 +48,12 @@ BOOL TaskbarWindow( // Does this window correspond to the top-level window of an
 	HWND hwnd
 	)
 {
+/*
+	ZeroMemory(Title, sizeof(Title));
+	GetWindowText(hwnd, Title, sizeof(Title) - 1);
+	if (!(_tcsstr(Title, L"Mozilla Firefox"))) // Ignore this program
+	    return FALSE;
+*/
     WINDOWINFO WindowInfo;
 	ZeroMemory(&WindowInfo, sizeof(WindowInfo));
     GetWindowInfo(hwnd, &WindowInfo);
@@ -63,7 +69,7 @@ BOOL TaskbarWindow( // Does this window correspond to the top-level window of an
  	    return FALSE;
     if (WindowInfo.dwExStyle & WS_EX_DLGMODALFRAME)
  	    return FALSE;
-    if (!GetWindow(hwnd, GW_CHILD)) // It should have children
+    if ((!GetWindow(hwnd, GW_CHILD)) && !(_tcsstr(Title, L"pgAdmin 4")) && !(_tcsstr(Title, L"Kindle")) && !(_tcsstr(Title, L"Mozilla Firefox"))) // It should have children, but not always (hint: use Spy++ here)
  	    return FALSE;
 	ZeroMemory(Title, sizeof(Title));
 	GetWindowText(hwnd, Title, sizeof(Title) - 1);

@@ -32,7 +32,7 @@
   </Process>
   <Process>
     <CommandLine>C:\Users\sbell\AppData\Local\Amazon\Kindle\application\Kindle.exe</CommandLine>
-    <Title>Kindle</Title>
+    <Title>Mr's Kindle for PC 5</Title>
     <left>1201</left>
     <top>1</top>
     <right>2399</right>
@@ -84,7 +84,7 @@
   </Process>
   <Process>
     <CommandLine>C:\Program Files (x86)\pgAdmin 4\runtime\pgAdmin4.exe</CommandLine>
-    <Title>pgAdmin</Title>
+    <Title>pgAdmin 4</Title>
     <left>1201</left>
     <top>1</top>
     <right>2399</right>
@@ -122,14 +122,13 @@
     <right>1199</right>
     <bottom>1879</bottom>
   </Process>
-  <!--
   <Process>
     <CommandLine>C:\Program Files (x86)\Microsoft VS Code\Code.exe</CommandLine>
-    <Title>Code</Title>
-    <Monitor>1</Monitor>
+    <Title>Visual Studio Code</Title>
+    <left>1201</left>
+    <top>1</top>
+    <right>2399</right>
+    <bottom>1879</bottom>
   </Process>
-  -->
-<!--
--->
 </ProcessList>
 
