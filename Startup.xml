@@ -63,7 +63,11 @@
     <bottom>1879</bottom>
   </Process>
   <Process>
-    <CommandLine>C:\Program Files (x86)\WinMerge\WinMergeU.exe /r C:\Users\sbell\Dev\Projects\DataWorkbench\app C:\Users\sbell\Dev\Projects\DataWorkbenchHeroku\app</CommandLine>
+    <CommandLine>C:\Program Files (x86)\WinMerge\WinMergeU.exe /r C:\Users\sbell\Dev\Projects\PLUS\app C:\Users\sbell\Dev\Projects\PLUS-Heroku-dev\app</CommandLine>
+    <Title>WinMerge</Title>
+  </Process>
+  <Process>
+    <CommandLine>C:\Program Files (x86)\WinMerge\WinMergeU.exe /r C:\Users\sbell\Dev\Projects\PLUS-Heroku-dev\app C:\Users\sbell\Dev\Projects\PLUS-Heroku-stage\app</CommandLine>
     <Title>WinMerge</Title>
   </Process>
   <Process>
@@ -76,7 +80,7 @@
   </Process>
   <Process>
     <CommandLine>C:\Program Files\Mozilla Firefox\firefox.exe</CommandLine>
-    <Title>Firefox</Title>
+    <Title>Mozilla Firefox</Title>
     <left>1201</left>
     <top>1</top>
     <right>2399</right>
@@ -100,7 +104,7 @@
   </Process>
   <Process>
     <CommandLine>C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe</CommandLine>
-    <Title>Visual Studio</Title>
+    <Title>Microsoft Visual Studio</Title>
     <left>1</left>
     <top>1</top>
     <right>1199</right>
@@ -108,7 +112,7 @@
   </Process>
   <Process>
     <CommandLine>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe</CommandLine>
-    <Title>Visual Studio</Title>
+    <Title>Microsoft Visual Studio</Title>
     <left>1</left>
     <top>1</top>
     <right>1199</right>
@@ -128,6 +132,14 @@
     <left>1201</left>
     <top>1</top>
     <right>2399</right>
+    <bottom>1879</bottom>
+  </Process>
+  <Process>
+    <CommandLine>C:\Users\sbell\Dev\Projects\UML Editor\Debug\UML Editor.exe</CommandLine>
+    <Title>UMLEditorDemo</Title>
+    <left>1</left>
+    <top>1</top>
+    <right>1199</right>
     <bottom>1879</bottom>
   </Process>
 </ProcessList>

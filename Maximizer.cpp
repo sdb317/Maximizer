@@ -20,6 +20,8 @@ long TaskbarSize = 0;
 TCHAR Title[4096];
 TCHAR ClassName[4096];
 TCHAR FileName[MAX_PATH];
+CodLib::CCoInitialise CoInitialise;
+CodLib::CDocument Document;
 
 std::vector<CMonitor*> MonitorList;
 
@@ -69,7 +71,13 @@ BOOL TaskbarWindow( // Does this window correspond to the top-level window of an
  	    return FALSE;
     if (WindowInfo.dwExStyle & WS_EX_DLGMODALFRAME)
  	    return FALSE;
-    if ((!GetWindow(hwnd, GW_CHILD)) && !(_tcsstr(Title, L"pgAdmin 4")) && !(_tcsstr(Title, L"Kindle")) && !(_tcsstr(Title, L"Mozilla Firefox"))) // It should have children, but not always (hint: use Spy++ here)
+    CodLib::CBstr XPath;
+    XPath.Format(L"/ProcessList/Process[contains(\"%s\",Title/text())]",Title);
+#ifdef _DEBUG
+    std::wcout << (_bstr_t)XPath << std::endl;
+#endif
+	CodLib::CNode Node = Document.FindNode(XPath);
+    if ((!GetWindow(hwnd, GW_CHILD)) && Node.IsEmpty()) // It should have children, but not always (hint: use Spy++ here) so see if it's in the list
  	    return FALSE;
 	ZeroMemory(Title, sizeof(Title));
 	GetWindowText(hwnd, Title, sizeof(Title) - 1);
@@ -142,8 +150,6 @@ BOOL Create( // Read the list and create each process
 	_TCHAR* DocumentName
 	)
 {
-	CodLib::CCoInitialise CoInitialise;
-	CodLib::CDocument Document;
 	Document.LoadDocument(CodLib::CBstr(DocumentName));
 	CodLib::CNodeList Nodes = Document.FindNodes(L"/ProcessList/Process");
 	CodLib::CNode Node;
@@ -253,12 +259,9 @@ BOOL CALLBACK EnumForRecord( // Record the current window positions in the XML d
     if (!TaskbarWindow(hwnd))
 	    return TRUE;
 	GetProcessInfo(hwnd);
-    CodLib::CDocument* pDocument = (CodLib::CDocument*)lParam;
-    _bstr_t XPath = L"";
-    XPath += L"/ProcessList/Process[CommandLine/text()=\"";
-    XPath += FileName;
-    XPath += L"\"]";
-	CodLib::CNode Node = pDocument->FindNode(XPath);
+    CodLib::CBstr XPath;
+    XPath.Format(L"/ProcessList/Process[CommandLine/text()=\"%s\"]",FileName);
+	CodLib::CNode Node = Document.FindNode(XPath);
     if ((!Node.IsEmpty()) && (_tcslen(Title) > 0)) {
         WINDOWPLACEMENT WindowPlacement;
 	    ZeroMemory(&WindowPlacement, sizeof(WindowPlacement));
@@ -279,7 +282,7 @@ BOOL Record(
 	CodLib::CCoInitialise CoInitialise;
 	CodLib::CDocument Document;
 	Document.LoadDocument(CodLib::CBstr(DocumentName));
-	EnumDesktopWindows(NULL, (WNDENUMPROC)EnumForRecord, (LPARAM)&Document);
+	EnumDesktopWindows(NULL, (WNDENUMPROC)EnumForRecord, (LPARAM)NULL);
 	return TRUE;
 }
 
@@ -291,18 +294,12 @@ BOOL CALLBACK EnumForPlayback( // Restore and position the windows based on the 
     if (!TaskbarWindow(hwnd))
 	    return TRUE;
 	GetProcessInfo(hwnd);
-    CodLib::CDocument* pDocument = (CodLib::CDocument*)lParam;
-    _bstr_t XPath = L"";
-    XPath += L"/ProcessList/Process[CommandLine/text()=\"";
-    XPath += FileName;
-    // /ProcessList/Process[CommandLine/text()="C:\Program Files\SumatraPDF\SumatraPDF.exe" and contains("Sumatra",Title/text())]
-    XPath += L"\" and contains(\"";
-    XPath += Title;
-    XPath += L"\",Title/text())]";
+    CodLib::CBstr XPath;
+    XPath.Format(L"/ProcessList/Process[CommandLine/text()=\"%s\" and contains(\"%s\",Title/text())]",FileName,Title);
 #ifdef _DEBUG
-    std::wcout << XPath << std::endl;
+    std::wcout << (_bstr_t)XPath << std::endl;
 #endif
-	CodLib::CNode Node = pDocument->FindNode(XPath);
+	CodLib::CNode Node = Document.FindNode(XPath);
     if ((!Node.IsEmpty()) && (_tcslen(Title) > 0)) {
         std::wcout << FileName << L" - " << Title << std::endl;
 		long left = (long)Node.FindNode(L"left");
@@ -311,7 +308,7 @@ BOOL CALLBACK EnumForPlayback( // Restore and position the windows based on the 
 		long bottom = (long)Node.FindNode(L"bottom");
 		long width = right - left;
 		long height = bottom - top;
-	    if (_tcscmp(Title, L"Microsoft Visual Studio") != 0) { // To include the border...
+	    if (_tcscmp(Title, L"Microsoft Visual Studio") == 0) { // To include the border...
 		    left += 1;
 		    top += 1;
 		    width += -2;
@@ -351,12 +348,8 @@ BOOL Playback(
 	_TCHAR* DocumentName
     )
 {
-	CodLib::CCoInitialise CoInitialise;
-	CodLib::CDocument Document;
 	Document.LoadDocument(CodLib::CBstr(DocumentName));
-	EnumDesktopWindows(NULL, (WNDENUMPROC)EnumForPlayback, (LPARAM)&Document);
-	HWND lTrayHwnd = FindWindow(_T("Shell_TrayWnd"), NULL);
-	SendMessage(lTrayHwnd, WM_COMMAND, MIN_ALL, 0); // Minimize all windows
+	EnumDesktopWindows(NULL, (WNDENUMPROC)EnumForPlayback, (LPARAM)NULL);
 	return TRUE;
 }
 
@@ -385,6 +378,9 @@ int _tmain(
 				break;
 			case 'p': // Restore all window positions
 				Playback(argv[2]);
+#ifndef _DEBUG
+		        SendMessage(lTrayHwnd, WM_COMMAND, MIN_ALL, 0); // Minimize all windows
+#endif
 				break;
 			default:
 				break;
