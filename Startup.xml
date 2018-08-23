@@ -1,11 +1,22 @@
 <ProcessList>
 <!--
+-->
   <Process>
     <CommandLine>C:\Program Files\Microsoft Office\Office16\OUTLOOK.EXE</CommandLine>
-    <Monitor>2</Monitor>
-    <Title>Outlook</Title>
+    <Title>Inbox - simon.bell@epfl.ch - Outlook</Title>
+    <left>1</left>
+    <top>1</top>
+    <right>1199</right>
+    <bottom>939</bottom>
   </Process>
--->
+  <Process>
+    <CommandLine>C:\Program Files\Microsoft Office\Office16\OUTLOOK.EXE</CommandLine>
+    <Title>Calendar - simon.bell@epfl.ch - Outlook</Title>
+    <left>1</left>
+    <top>941</top>
+    <right>1199</right>
+    <bottom>1879</bottom>
+  </Process>
   <Process>
     <CommandLine>C:\Program Files (x86)\Google\Chrome\Application\chrome.exe</CommandLine>
     <Title>Google Chrome</Title>
