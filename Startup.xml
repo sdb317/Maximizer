@@ -1,157 +1,21 @@
 <ProcessList>
+  <Process>
+    <CommandLine>C:\Program Files (x86)\VisualXPath\VisualXPath.exe</CommandLine>
+    <Title>VisualXPath</Title>
+    <left>1201</left>
+    <top>1</top>
+    <right>2399</right>
+    <bottom>1879</bottom>
+  </Process>
 <!--
+  <Process>
+    <CommandLine></CommandLine>
+    <Title></Title>
+    <left>1201</left>
+    <top>1</top>
+    <right>2399</right>
+    <bottom>1879</bottom>
+  </Process>
 -->
-  <Process>
-    <CommandLine>C:\Program Files\Microsoft Office\Office16\OUTLOOK.EXE</CommandLine>
-    <Title>Inbox - simon.bell@epfl.ch - Outlook</Title>
-    <left>1</left>
-    <top>1</top>
-    <right>1199</right>
-    <bottom>939</bottom>
-  </Process>
-  <Process>
-    <CommandLine>C:\Program Files\Microsoft Office\Office16\OUTLOOK.EXE</CommandLine>
-    <Title>Calendar - simon.bell@epfl.ch - Outlook</Title>
-    <left>1</left>
-    <top>941</top>
-    <right>1199</right>
-    <bottom>1879</bottom>
-  </Process>
-  <Process>
-    <CommandLine>C:\Program Files (x86)\Google\Chrome\Application\chrome.exe</CommandLine>
-    <Title>Google Chrome</Title>
-    <left>1</left>
-    <top>1</top>
-    <right>1199</right>
-    <bottom>1879</bottom>
-  </Process>
-  <Process>
-    <CommandLine>C:\Program Files (x86)\Google\Chrome\Application\chrome.exe</CommandLine>
-    <Title>PLUS</Title>
-    <left>1</left>
-    <top>1</top>
-    <right>1199</right>
-    <bottom>939</bottom>
-  </Process>
-  <Process>
-    <CommandLine>C:\Program Files (x86)\Google\Chrome\Application\chrome.exe</CommandLine>
-    <Title>DevTools</Title>
-    <left>1</left>
-    <top>941</top>
-    <right>1199</right>
-    <bottom>1879</bottom>
-  </Process>
-  <Process>
-    <CommandLine>C:\Users\sbell\AppData\Local\Amazon\Kindle\application\Kindle.exe</CommandLine>
-    <Title>Mr's Kindle for PC 5</Title>
-    <left>1201</left>
-    <top>1</top>
-    <right>2399</right>
-    <bottom>1879</bottom>
-  </Process>
-  <Process>
-    <CommandLine>C:\Program Files\SumatraPDF\SumatraPDF.exe</CommandLine>
-    <Title>Sumatra</Title>
-    <left>1201</left>
-    <top>1</top>
-    <right>2399</right>
-    <bottom>1879</bottom>
-  </Process>
-  <Process>
-    <CommandLine>C:\Program Files\Microsoft Office\Office16\ONENOTE.EXE</CommandLine>
-    <Title>OneNote</Title>
-    <left>1201</left>
-    <top>1</top>
-    <right>2399</right>
-    <bottom>1879</bottom>
-  </Process>
-  <Process>
-    <CommandLine>C:\Program Files\Microsoft Office\Office16\EXCEL.EXE</CommandLine>
-    <Title>Excel</Title>
-    <left>1</left>
-    <top>1</top>
-    <right>1199</right>
-    <bottom>1879</bottom>
-  </Process>
-  <Process>
-    <CommandLine>C:\Program Files (x86)\WinMerge\WinMergeU.exe /r C:\Users\sbell\Dev\Projects\PLUS\app C:\Users\sbell\Dev\Projects\PLUS-Heroku-dev\app</CommandLine>
-    <Title>WinMerge</Title>
-  </Process>
-  <Process>
-    <CommandLine>C:\Program Files (x86)\WinMerge\WinMergeU.exe /r C:\Users\sbell\Dev\Projects\PLUS-Heroku-dev\app C:\Users\sbell\Dev\Projects\PLUS-Heroku-stage\app</CommandLine>
-    <Title>WinMerge</Title>
-  </Process>
-  <Process>
-    <CommandLine>C:\Program Files\Notepad++\notepad++.exe</CommandLine>
-    <Title>Notepad++</Title>
-    <left>1201</left>
-    <top>1</top>
-    <right>2399</right>
-    <bottom>1879</bottom>
-  </Process>
-  <Process>
-    <CommandLine>C:\Program Files\Mozilla Firefox\firefox.exe</CommandLine>
-    <Title>Mozilla Firefox</Title>
-    <left>1201</left>
-    <top>1</top>
-    <right>2399</right>
-    <bottom>1879</bottom>
-  </Process>
-  <Process>
-    <CommandLine>C:\Program Files (x86)\pgAdmin 4\runtime\pgAdmin4.exe</CommandLine>
-    <Title>pgAdmin 4</Title>
-    <left>1201</left>
-    <top>1</top>
-    <right>2399</right>
-    <bottom>1879</bottom>
-  </Process>
-  <Process>
-    <CommandLine>C:\Users\sbell\AppData\Local\Programs\Fiddler\Fiddler.exe</CommandLine>
-    <Title>Fiddler</Title>
-    <left>1201</left>
-    <top>1</top>
-    <right>2399</right>
-    <bottom>1879</bottom>
-  </Process>
-  <Process>
-    <CommandLine>C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe</CommandLine>
-    <Title>Microsoft Visual Studio</Title>
-    <left>1</left>
-    <top>1</top>
-    <right>1199</right>
-    <bottom>1879</bottom>
-  </Process>
-  <Process>
-    <CommandLine>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe</CommandLine>
-    <Title>Microsoft Visual Studio</Title>
-    <left>1</left>
-    <top>1</top>
-    <right>1199</right>
-    <bottom>1879</bottom>
-  </Process>
-  <Process>
-    <CommandLine>C:\Program Files (x86)\Microsoft Visual Studio\Common\VSS\win32\SSEXP.EXE</CommandLine>
-    <Title>Visual SourceSafe</Title>
-    <left>1</left>
-    <top>941</top>
-    <right>1199</right>
-    <bottom>1879</bottom>
-  </Process>
-  <Process>
-    <CommandLine>C:\Program Files (x86)\Microsoft VS Code\Code.exe</CommandLine>
-    <Title>Visual Studio Code</Title>
-    <left>1201</left>
-    <top>1</top>
-    <right>2399</right>
-    <bottom>1879</bottom>
-  </Process>
-  <Process>
-    <CommandLine>C:\Users\sbell\Dev\Projects\UML Editor\Debug\UML Editor.exe</CommandLine>
-    <Title>UMLEditorDemo</Title>
-    <left>1</left>
-    <top>1</top>
-    <right>1199</right>
-    <bottom>1879</bottom>
-  </Process>
 </ProcessList>
 

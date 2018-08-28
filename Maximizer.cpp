@@ -50,47 +50,76 @@ BOOL TaskbarWindow( // Does this window correspond to the top-level window of an
 	HWND hwnd
 	)
 {
-/*
 	ZeroMemory(Title, sizeof(Title));
 	GetWindowText(hwnd, Title, sizeof(Title) - 1);
-	if (!(_tcsstr(Title, L"Mozilla Firefox"))) // Ignore this program
+/*
+	if (!(_tcsstr(Title, L"Mozilla Firefox"))) // Ignore all but this program
 	    return FALSE;
 */
+	if (!(_tcslen(Title) > 0)) {
+	    return FALSE; // If there's no title then there's nothing to say
+    }
+#ifdef _DEBUG
+    std::wcout << Title << std::endl;
+#endif
     WINDOWINFO WindowInfo;
 	ZeroMemory(&WindowInfo, sizeof(WindowInfo));
     GetWindowInfo(hwnd, &WindowInfo);
     if (!(WindowInfo.dwExStyle & WS_EX_APPWINDOW)) {
-        if (WindowInfo.dwExStyle & WS_EX_TOOLWINDOW)
+        if (WindowInfo.dwExStyle & WS_EX_TOOLWINDOW) {
+#ifdef _DEBUG
+            std::wcout << L"\tFailed: " << L"WS_EX_TOOLWINDOW" << std::endl;
+#endif
  	        return FALSE;
-        if (WindowInfo.dwStyle & WS_CHILD)
+        }
+        if (WindowInfo.dwStyle & WS_CHILD) {
+#ifdef _DEBUG
+            std::wcout << L"\tFailed: " << L"WS_CHILD" << std::endl;
+#endif
  	        return FALSE;
+        }
     }
-    if ((GetParent(hwnd)) && (WindowInfo.dwStyle & WS_POPUP))
+    if ((GetParent(hwnd)) && (WindowInfo.dwStyle & WS_POPUP)) {
+#ifdef _DEBUG
+        std::wcout << L"\tFailed: " << L"Parent & WS_POPUP" << std::endl;
+#endif
  	    return FALSE;
-    if (WindowInfo.dwExStyle & WS_EX_CLIENTEDGE)
+    }
+    if (WindowInfo.dwExStyle & WS_EX_CLIENTEDGE) {
+#ifdef _DEBUG
+        std::wcout << L"\tFailed: " << L"WS_EX_CLIENTEDGE" << std::endl;
+#endif
  	    return FALSE;
-    if (WindowInfo.dwExStyle & WS_EX_DLGMODALFRAME)
+    }
+    if (WindowInfo.dwExStyle & WS_EX_DLGMODALFRAME) {
+#ifdef _DEBUG
+        std::wcout << L"\tFailed: " << L"WS_EX_DLGMODALFRAME" << std::endl;
+#endif
  	    return FALSE;
+    }
     CodLib::CBstr XPath;
     XPath.Format(L"/ProcessList/Process[contains(\"%s\",Title/text())]",Title);
-#ifdef _DEBUG
-    std::wcout << (_bstr_t)XPath << std::endl;
-#endif
 	CodLib::CNode Node = Document.FindNode(XPath);
-    if ((!GetWindow(hwnd, GW_CHILD)) && Node.IsEmpty()) // It should have children, but not always (hint: use Spy++ here) so see if it's in the list
+    if ((!GetWindow(hwnd, GW_CHILD)) && Node.IsEmpty()) { // It should have children, but not always (hint: use Spy++ here) so see if it's in the list
+#ifdef _DEBUG
+        std::wcout << L"\tFailed: " << L"No children & not found: " << (_bstr_t)XPath << std::endl;
+#endif
  	    return FALSE;
-	ZeroMemory(Title, sizeof(Title));
-	GetWindowText(hwnd, Title, sizeof(Title) - 1);
-	if (!(_tcslen(Title) > 0)) // Ignore windows with no titles
-	    return FALSE;
-	if (FindWindow(L"Windows.UI.Core.CoreWindow", Title)) { // Ignore all hidden 'Metro' apps
+    }
+	if (FindWindow(L"Windows.UI.Core.CoreWindow", Title)) {
+#ifdef _DEBUG
+        std::wcout << L"\tFailed: " << L"Metro app" << std::endl;
+#endif
 	    return FALSE;
     }
     WINDOWPLACEMENT WindowPlacement;
 	ZeroMemory(&WindowPlacement, sizeof(WindowPlacement));
     GetWindowPlacement(hwnd, &WindowPlacement);
-    if (!WindowPlacement.rcNormalPosition.left && !WindowPlacement.rcNormalPosition.top && !WindowPlacement.rcNormalPosition.right && !WindowPlacement.rcNormalPosition.bottom)
-	    return FALSE; // Zero size
+    if (!WindowPlacement.rcNormalPosition.left && !WindowPlacement.rcNormalPosition.top && !WindowPlacement.rcNormalPosition.right && !WindowPlacement.rcNormalPosition.bottom) {
+#ifdef _DEBUG
+        std::wcout << L"\tFailed: " << L"Zero size" << std::endl;
+#endif
+    }
  	return TRUE;
 }
 
