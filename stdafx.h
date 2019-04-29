@@ -24,3 +24,4 @@
 #include <comutil.h>
 
 #import "C:\WINDOWS\system32\msxml6.dll" rename_namespace("MSXML")
+
