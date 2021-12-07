@@ -251,16 +251,18 @@ BOOL CALLBACK EnumForLayout( // Add a list of 'restored' windows to tile for eac
 			        if ((!(_tcsstr(Title, L"Settings"))) && (!(_tcsstr(Title, L"Microsoft Store"))))// Ignore Microsoft crap
 					    if (!(_tcsstr(Title, L"Maximizer"))) // Ignore this program
 						    if (!(_tcscmp(Title, L"Microsoft Edge") == 0) && !(_tcscmp(Title, L"Program Manager") == 0)) // Ignore Windows hidden desktop bits
-						    if ((GetWindow(hwnd, GW_CHILD) != NULL) || (_tcscmp(Title, L"Microsoft Visual Studio") != 0)) {
-							    std::wcout << FileName << std::endl;
-							    std::wcout << _T("    ") << Title << std::endl;
-							    HMONITOR hMonitor = MonitorFromWindow(hwnd, NULL); // Need to add it to the correct monitor's window list
-							    std::for_each(
-								    MonitorList.begin(),
-								    MonitorList.end(),
-								    [hMonitor, hwnd](CMonitor* pMonitor) { if (pMonitor->hMonitor == hMonitor) pMonitor->WindowList.push_back(hwnd); }
-							    );
-						    }
+								if (!(_tcsstr(Title, L"OverlayWindow"))) // Ignore this program
+								if (!(_tcsstr(Title, L"ZPToolBarParentWnd"))) // Ignore this program
+								if ((GetWindow(hwnd, GW_CHILD) != NULL) || (_tcscmp(Title, L"Microsoft Visual Studio") != 0)) {
+									std::wcout << FileName << std::endl;
+									std::wcout << _T("    ") << Title << std::endl;
+									HMONITOR hMonitor = MonitorFromWindow(hwnd, NULL); // Need to add it to the correct monitor's window list
+									std::for_each(
+										MonitorList.begin(),
+										MonitorList.end(),
+										[hMonitor, hwnd](CMonitor* pMonitor) { if (pMonitor->hMonitor == hMonitor) pMonitor->WindowList.push_back(hwnd); }
+									);
+								}
 	return TRUE;
 }
 
