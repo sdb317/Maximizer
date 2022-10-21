@@ -248,11 +248,10 @@ BOOL CALLBACK EnumForLayout( // Add a list of 'restored' windows to tile for eac
 		if (IsWindowVisible(hwnd))
 			if (!(_tcsstr(FileName, L"SystemApps"))) // Ignore system apps
 				if (_tcslen(Title) > 0) // Ignore windows with no titles
-			        if ((!(_tcsstr(Title, L"Settings"))) && (!(_tcsstr(Title, L"Microsoft Store"))))// Ignore Microsoft crap
+
+			        if ((!(_tcsstr(Title, L"Settings"))) && (!(_tcsstr(Title, L"Microsoft Store"))) && (!(_tcsstr(Title, L"Metro: "))))// Ignore Microsoft crap
 					    if (!(_tcsstr(Title, L"Maximizer"))) // Ignore this program
-						    if (!(_tcscmp(Title, L"Microsoft Edge") == 0) && !(_tcscmp(Title, L"Program Manager") == 0)) // Ignore Windows hidden desktop bits
-								if (!(_tcsstr(Title, L"OverlayWindow"))) // Ignore this program
-								if (!(_tcsstr(Title, L"ZPToolBarParentWnd"))) // Ignore this program
+						    if (!(_tcscmp(Title, L"Microsoft Edge") == 0) && !(_tcscmp(Title, L"Program Manager") == 0) && !(_tcscmp(Title, L"JamPostMessageWindow") == 0) && !(_tcscmp(Title, L"ZPToolBarParentWnd") == 0) && !(_tcscmp(Title, L"OverlayWindow") == 0)) // Ignore Windows hidden desktop bits
 								if ((GetWindow(hwnd, GW_CHILD) != NULL) || (_tcscmp(Title, L"Microsoft Visual Studio") != 0)) {
 									std::wcout << FileName << std::endl;
 									std::wcout << _T("    ") << Title << std::endl;

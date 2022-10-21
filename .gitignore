@@ -3,4 +3,11 @@ Release/
 ipch/
 *.sdf
 *.suo
+Maximizer.VC.db
+Maximizer.VC.VC.opendb
+*.vcxproj.user
 *.vcxproj.filters
+.vs/
+Start*.xml
+build.*
+*.log
